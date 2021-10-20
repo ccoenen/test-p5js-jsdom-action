@@ -2,13 +2,21 @@ const jsdom = require('jsdom');
 const JSDOM = jsdom.JSDOM;
 const fs = require('fs');
 
+let framecounter = 0;
+const numberOfFrames = 5;
+const frameInterval = 1000;
+
+const sketchfile = 'sketch.js';
+
+fs.mkdirSync('output');
+
 const dom = new JSDOM(
 	`
 	<!DOCTYPE html>
 	<html>
 	<head>
 		<script src="node_modules/p5/lib/p5.js"></script>
-		<script src="sketch.js"></script>
+		<script src="${sketchfile}"></script>
 	</head>
 	<body>
 	</body>
@@ -21,13 +29,17 @@ const dom = new JSDOM(
 	}
 );
 
-setTimeout(() => {
+setInterval(() => {
 	const c = dom.window.document.body.getElementsByTagName('canvas')[0]
 	if (c) {
 		const data = c.toDataURL('image/png').replace('data:image/png;base64,', '');
-		fs.writeFileSync('test.png', atob(decodeURIComponent(data)), 'binary');
-		process.exit(0);
+		const filename = `output/${(new Date()).getTime()}.png`;
+		fs.writeFileSync(filename, atob(decodeURIComponent(data)), 'binary');
+		console.info(`wrote ${filename}`);
+		if (++framecounter >= numberOfFrames) {
+			process.exit(0);
+		}
 	} else {
 		throw "no canvas element found!";
 	}
-}, 1500);
+}, frameInterval);
