@@ -8,7 +8,8 @@ const frameInterval = 1000;
 
 const sketchfile = 'sketch.js';
 
-fs.mkdirSync('output');
+
+fs.mkdirSync('output', {recursive: true}); // recursive also suppresses error if already existing.
 
 const dom = new JSDOM(
 	`
