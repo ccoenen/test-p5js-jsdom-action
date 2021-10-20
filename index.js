@@ -30,4 +30,4 @@ setTimeout(() => {
 	} else {
 		throw "no canvas element found!";
 	}
-}, 150);
+}, 1500);
