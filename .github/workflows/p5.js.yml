@@ -23,3 +23,13 @@ jobs:
         name: my-artifact
         path: output/*.png
         if-no-files-found: error
+    - name: Post to Minio
+      uses: hkdobrev/minio-deploy-action@v1
+      with:
+        endpoint: ${{ secrets.MINIO_ENDPOINT }}
+        access_key: ${{ secrets.MINIO_ACCESS_KEY }}
+        secret_key: ${{ secrets.MINIO_SECRET_KEY }}
+        bucket: 'p5js-action-test'
+        # Optional inputs with their defaults:
+        source_dir: 'output'
+        target_dir: '/'
